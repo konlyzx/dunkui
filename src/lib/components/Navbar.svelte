@@ -44,7 +44,7 @@
         <!-- Right CTA -->
         <div class="nav-actions">
             <a
-                href="https://github.com/dunkui"
+                href="https://github.com/konlyzx/dunkui"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="nav-icon-btn"
@@ -117,7 +117,7 @@
             </a>
             <div class="mobile-socials">
                 <a
-                    href="https://github.com/dunkui"
+                    href="https://github.com/konlyzx/dunkui"
                     target="_blank"
                     rel="noopener noreferrer">GitHub</a
                 >
