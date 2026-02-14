@@ -1,8 +1,33 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import { onMount, onDestroy, tick } from "svelte";
+    import {
+        animations,
+        backgrounds,
+        components,
+        textAnimations,
+    } from "$lib/data/jsx-bridge-registry";
 
     let currentPath = $derived($page.url.pathname);
+
     let mobileMenuOpen = $state(false);
+    let activeLineY = $state(-100);
+    let activeLineVisible = $state(false);
+    let hoverLineY = $state(-100);
+    let hoverLineVisible = $state(false);
+
+    let hoverHideTimer: ReturnType<typeof setTimeout> | null = null;
+
+    let sidebarInnerEl: HTMLDivElement | undefined;
+    let sidebarEl: HTMLElement | undefined;
+    let removeSidebarScrollListener: (() => void) | null = null;
+
+    const SIDEBAR_SCROLL_KEY = "docs:sidebar-scroll";
+
+    let itemEls: Record<string, HTMLAnchorElement | undefined> = {};
+
+    const mapBridgeItems = (items: { route: string; name: string }[]) =>
+        items.map((item) => ({ href: item.route, label: item.name, tag: "" }));
 
     const categories = [
         {
@@ -12,29 +37,32 @@
         {
             title: "Components",
             items: [
-                { href: "/docs/glitch-text", label: "Glitch Text", tag: "" },
+                { href: "/docs/components", label: "Overview", tag: "" },
+                ...mapBridgeItems(components),
             ],
+        },
+        {
+            title: "Animations",
+            items: [{ href: "/docs/animations", label: "Overview", tag: "" }, ...mapBridgeItems(animations)],
         },
         {
             title: "Backgrounds",
             items: [
-                {
-                    href: "/docs/faulty-terminal",
-                    label: "Faulty Terminal",
-                    tag: "",
-                },
-                {
-                    href: "/docs/particle-field",
-                    label: "Particle Field",
-                    tag: "",
-                },
-                { href: "/docs/aurora", label: "Aurora Borealis", tag: "" },
-                { href: "/docs/retro-grid", label: "Retro Grid", tag: "New" },
+                { href: "/docs/backgrounds", label: "Overview", tag: "" },
+                ...mapBridgeItems(backgrounds),
+            ],
+        },
+        {
+            title: "Text Animations",
+            items: [
+                { href: "/docs/text-animations", label: "Overview", tag: "" },
+                ...mapBridgeItems(textAnimations),
             ],
         },
         {
             title: "Tools",
             items: [
+                { href: "/docs/tools", label: "Overview", tag: "" },
                 { href: "/docs/theme-kit", label: "Theme Kit", tag: "" },
                 {
                     href: "/docs/shader-forge",
@@ -45,22 +73,177 @@
         },
     ];
 
+    const usefulLinks = [
+        { href: "https://github.com/dunkui", label: "GitHub", external: true },
+        { href: "/", label: "Showcase", external: false },
+    ];
+
     let { children } = $props();
+
+    function getLineCenterY(el: HTMLElement) {
+        if (!sidebarInnerEl) return -100;
+        const container = sidebarInnerEl.getBoundingClientRect();
+        const rect = el.getBoundingClientRect();
+        return rect.top - container.top + rect.height / 2;
+    }
+
+    async function updateActiveLine() {
+        await tick();
+        const activeEl = itemEls[currentPath];
+        if (!activeEl) {
+            activeLineVisible = false;
+            return;
+        }
+
+        activeLineY = getLineCenterY(activeEl);
+        activeLineVisible = true;
+    }
+
+    function onItemEnter(el: HTMLAnchorElement) {
+        if (hoverHideTimer) clearTimeout(hoverHideTimer);
+        hoverLineY = getLineCenterY(el);
+        hoverLineVisible = true;
+    }
+
+    function onItemLeave() {
+        if (hoverHideTimer) clearTimeout(hoverHideTimer);
+        hoverHideTimer = setTimeout(() => {
+            hoverLineVisible = false;
+        }, 120);
+    }
+
+    function closeMobileMenu() {
+        mobileMenuOpen = false;
+    }
+
+    function saveSidebarScroll() {
+        if (!sidebarEl || typeof sessionStorage === "undefined") return;
+        sessionStorage.setItem(SIDEBAR_SCROLL_KEY, String(sidebarEl.scrollTop));
+    }
+
+    function restoreSidebarScroll() {
+        if (!sidebarEl || typeof sessionStorage === "undefined") return;
+        const raw = sessionStorage.getItem(SIDEBAR_SCROLL_KEY);
+        if (!raw) return;
+        const parsed = Number(raw);
+        if (Number.isFinite(parsed)) {
+            sidebarEl.scrollTop = parsed;
+        }
+    }
+
+    $effect(() => {
+        currentPath;
+        updateActiveLine();
+        mobileMenuOpen = false;
+    });
+
+    onMount(() => {
+        const onResize = () => updateActiveLine();
+        window.addEventListener("resize", onResize);
+
+        restoreSidebarScroll();
+        if (sidebarEl) {
+            const onSidebarScroll = () => saveSidebarScroll();
+            sidebarEl.addEventListener("scroll", onSidebarScroll, { passive: true });
+            removeSidebarScrollListener = () => {
+                sidebarEl?.removeEventListener("scroll", onSidebarScroll);
+            };
+        }
+        updateActiveLine();
+
+        return () => {
+            window.removeEventListener("resize", onResize);
+            removeSidebarScrollListener?.();
+            removeSidebarScrollListener = null;
+        };
+    });
+
+    onDestroy(() => {
+        if (hoverHideTimer) clearTimeout(hoverHideTimer);
+    });
 </script>
 
-<!-- ===== DOCS 3-COL LAYOUT ===== -->
+<div class="docs-mobile-header">
+    <a href="/" class="mobile-brand">DunkUI</a>
+    <button type="button" class="mobile-menu-btn" onclick={() => (mobileMenuOpen = !mobileMenuOpen)}>
+        {mobileMenuOpen ? "Close" : "Menu"}
+    </button>
+</div>
+
+{#if mobileMenuOpen}
+    <button type="button" class="mobile-drawer-backdrop" onclick={closeMobileMenu} aria-label="Close menu"></button>
+    <div class="mobile-drawer">
+        <div class="mobile-drawer-head">
+            <span>Navigation</span>
+            <button type="button" class="mobile-menu-btn" onclick={closeMobileMenu}>X</button>
+        </div>
+
+        {#each categories as cat}
+            <div class="mobile-group">
+                <p class="category-name">{cat.title}</p>
+                <div class="category-items">
+                    {#each cat.items as item}
+                        <a
+                            href={item.href}
+                            class="sidebar-item"
+                            class:active={currentPath === item.href}
+                            onclick={closeMobileMenu}
+                        >
+                            {item.label}
+                            {#if item.tag === "New"}
+                                <span class="new-tag">New</span>
+                            {:else if item.tag === "Updated"}
+                                <span class="updated-tag">Updated</span>
+                            {/if}
+                        </a>
+                    {/each}
+                </div>
+            </div>
+        {/each}
+
+        <div class="mobile-group">
+            <p class="category-name">Useful Links</p>
+            <div class="category-items">
+                {#each usefulLinks as link}
+                    <a
+                        href={link.href}
+                        class="sidebar-item"
+                        target={link.external ? "_blank" : undefined}
+                        rel={link.external ? "noopener noreferrer" : undefined}
+                        onclick={closeMobileMenu}
+                    >
+                        {link.label}
+                    </a>
+                {/each}
+            </div>
+        </div>
+    </div>
+{/if}
+
 <div class="docs-layout">
-    <nav class="sidebar">
-        <div class="sidebar-inner">
+    <nav class="sidebar" bind:this={sidebarEl}>
+        <div class="sidebar-inner" bind:this={sidebarInnerEl}>
+            <div
+                class="line active-line"
+                style={`transform:translateY(${activeLineY - 8}px);opacity:${activeLineVisible ? 1 : 0};`}
+            ></div>
+            <div
+                class="line hover-line"
+                style={`transform:translateY(${hoverLineY - 8}px);opacity:${hoverLineVisible ? 1 : 0};`}
+            ></div>
+
             {#each categories as cat}
                 <div class="sidebar-section">
                     <p class="category-name">{cat.title}</p>
-                    <div class="category-items">
+                    <div class="category-items with-line">
                         {#each cat.items as item}
                             <a
                                 href={item.href}
                                 class="sidebar-item"
                                 class:active={currentPath === item.href}
+                                bind:this={itemEls[item.href]}
+                                onmouseenter={(e) => onItemEnter(e.currentTarget as HTMLAnchorElement)}
+                                onmouseleave={onItemLeave}
                             >
                                 {item.label}
                                 {#if item.tag === "New"}
@@ -91,47 +274,12 @@
                 class="pro-card-link"
             >
                 <div class="right-card pro-card">
-                    <p class="pro-title">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            ><path
-                                d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
-                            /><path
-                                d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"
-                            /><path
-                                d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"
-                            /><path
-                                d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"
-                            /></svg
-                        >
-                        Get DunkUI Pro
-                    </p>
+                    <p class="pro-title">Get DunkUI Pro</p>
                     <p class="pro-desc">
-                        55+ components, 100+ blocks & 5 templates to ship
-                        memorable products faster.
+                        55+ components, 100+ blocks & 5 templates to ship memorable products faster.
                     </p>
                     <div class="pro-cta">
                         <span>Explore Pro</span>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            ><path d="M5 12h14" /><path
-                                d="m12 5 7 7-7 7"
-                            /></svg
-                        >
                     </div>
                 </div>
             </a>
@@ -139,26 +287,21 @@
             <div class="right-card sponsors-card">
                 <p class="sponsors-title">Our Sponsors</p>
                 <p class="sponsors-desc">
-                    Help us maintain and grow DunkUI, keeping it free for devs
-                    worldwide.
+                    Help us maintain and grow DunkUI, keeping it free for devs worldwide.
                 </p>
 
                 <div class="sponsor-tier">
                     <span class="tier-label">DIAMOND</span>
-                    <a href="#" class="sponsor-item">
+                    <a href="https://shadcnblocks.com" target="_blank" rel="noopener noreferrer" class="sponsor-item">
                         <span class="sponsor-logo">⬡</span>
                         <div class="sponsor-info">
-                            <strong>ShadcnBlocks.com</strong><span
-                                >2100+ extra Shadcn UI blocks</span
-                            >
+                            <strong>ShadcnBlocks.com</strong><span>2100+ extra Shadcn UI blocks</span>
                         </div>
                     </a>
-                    <a href="#" class="sponsor-item">
+                    <a href="https://shadcnstudio.com" target="_blank" rel="noopener noreferrer" class="sponsor-item">
                         <span class="sponsor-logo">⬡</span>
                         <div class="sponsor-info">
-                            <strong>shadcnstudio.com</strong><span
-                                >shadcn blocks & templates</span
-                            >
+                            <strong>shadcnstudio.com</strong><span>shadcn blocks & templates</span>
                         </div>
                     </a>
                 </div>
@@ -166,58 +309,21 @@
                 <div class="sponsor-tier">
                     <span class="tier-label">SILVER</span>
                     <div class="sponsor-logos-row">
-                        <a
-                            href="#"
-                            class="sponsor-logo-small"
-                            title="NEXT.js WEEKLY">N</a
-                        >
-                        <a href="#" class="sponsor-logo-small" title="shadcraft"
-                            >⬡</a
-                        >
-                        <a
-                            href="#"
-                            class="sponsor-logo-small"
-                            title="shadcn blocks">S</a
-                        >
+                        <span class="sponsor-logo-small" title="NEXT.js WEEKLY">N</span>
+                        <span class="sponsor-logo-small" title="shadcraft">⬡</span>
+                        <span class="sponsor-logo-small" title="shadcn blocks">S</span>
                     </div>
-                </div>
-
-                <div class="sponsor-extra-logo">
-                    <span class="extra-name">✦efferd</span>
                 </div>
 
                 <a href="mailto:sponsor@dunkui.dev" class="sponsor-cta-btn">
                     Become a Sponsor
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        ><path
-                            d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                        /><polyline points="15 3 21 3 21 9" /><line
-                            x1="10"
-                            y1="14"
-                            x2="21"
-                            y2="3"
-                        /></svg
-                    >
                 </a>
-                <p class="sponsor-footnote">
-                    Get your brand in front of 500k+ devs monthly.<br /><span
-                        >Limited Spots. Secure yours.</span
-                    >
-                </p>
             </div>
         </div>
     </aside>
 </div>
 
 <style>
-    /* ===== DOCS 3-COL LAYOUT ===== */
     .docs-layout {
         display: flex;
         min-height: 100vh;
@@ -225,26 +331,115 @@
         padding-top: 56px;
     }
 
-    /* ===== SIDEBAR ===== */
+    .docs-mobile-header {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        z-index: 90;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: #060010;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mobile-brand {
+        text-decoration: none;
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+
+    .mobile-menu-btn {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.02);
+        color: #fff;
+        border-radius: 10px;
+        padding: 0.35rem 0.65rem;
+        font-size: 0.75rem;
+    }
+
+    .mobile-drawer-backdrop {
+        position: fixed;
+        inset: 56px 0 0;
+        background: rgba(2, 0, 8, 0.62);
+        z-index: 95;
+        border: none;
+        width: 100%;
+    }
+
+    .mobile-drawer {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        bottom: 0;
+        width: min(94vw, 420px);
+        padding: 1rem;
+        overflow-y: auto;
+        z-index: 96;
+        background: #060010;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .mobile-drawer-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.8rem;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .mobile-group {
+        margin-bottom: 1rem;
+    }
+
     .sidebar {
         position: fixed;
         top: 56px;
         left: 0;
         bottom: 0;
-        width: 200px;
+        width: 220px;
         overflow-y: auto;
         padding: 0.75rem 0;
         z-index: 50;
         border-right: 1px solid rgba(255, 255, 255, 0.04);
     }
+
     .sidebar-inner {
+        position: relative;
         display: flex;
         flex-direction: column;
         padding: 0.25rem 0.6rem;
     }
-    .sidebar-section {
-        margin-bottom: 0.5rem;
+
+    .line {
+        position: absolute;
+        left: 0;
+        width: 2px;
+        height: 16px;
+        border-radius: 999px;
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+        pointer-events: none;
     }
+
+    .active-line {
+        background: #fff;
+        z-index: 2;
+    }
+
+    .hover-line {
+        background: rgba(255, 255, 255, 0.45);
+        z-index: 1;
+    }
+
+    .sidebar-section {
+        margin-bottom: 0.55rem;
+    }
+
     .category-name {
         font-size: 0.68rem;
         text-transform: uppercase;
@@ -254,65 +449,75 @@
         padding: 0.4rem 0.6rem 0.25rem;
         margin: 0;
     }
+
     .category-items {
         display: flex;
         flex-direction: column;
         gap: 1px;
     }
+
+    .with-line {
+        margin-left: 0.5rem;
+        padding-left: 0.6rem;
+        border-left: 1px solid #392e4e;
+    }
+
     .sidebar-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.3rem 0.6rem;
+        gap: 0.45rem;
+        padding: 0.3rem 0.55rem;
         border-radius: 5px;
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.55);
         font-size: 0.8rem;
         font-weight: 400;
         transition: all 0.15s;
         text-decoration: none;
     }
+
     .sidebar-item:hover {
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(255, 255, 255, 0.88);
         background: rgba(255, 255, 255, 0.03);
     }
+
     .sidebar-item.active {
         color: #fff;
         font-weight: 500;
     }
-    .new-tag {
-        font-size: 0.55rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        background: rgba(139, 92, 246, 0.2);
-        color: #a78bfa;
-        padding: 1px 5px;
-        border-radius: 3px;
-    }
+
+    .new-tag,
     .updated-tag {
         font-size: 0.55rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        background: rgba(56, 189, 248, 0.15);
-        color: #38bdf8;
         padding: 1px 5px;
         border-radius: 3px;
     }
 
-    /* ===== MAIN CONTENT ===== */
+    .new-tag {
+        background: rgba(139, 92, 246, 0.2);
+        color: #a78bfa;
+    }
+
+    .updated-tag {
+        background: rgba(56, 189, 248, 0.15);
+        color: #38bdf8;
+    }
+
     .main-content {
         flex: 1;
-        margin-left: 200px;
+        margin-left: 220px;
         margin-right: 260px;
         padding: 1.5rem 2.5rem 4rem;
         min-width: 0;
     }
+
     .page-content {
         max-width: 100%;
     }
 
-    /* ===== RIGHT PANEL ===== */
     .right-panel {
         position: fixed;
         top: 56px;
@@ -324,78 +529,80 @@
         z-index: 50;
         border-left: 1px solid rgba(255, 255, 255, 0.04);
     }
+
     .right-panel-inner {
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
     }
+
     .pro-card-link {
         text-decoration: none;
     }
+
     .right-card {
         border-radius: 12px;
         border: 1px solid rgba(139, 92, 246, 0.15);
         padding: 1rem;
         background: rgba(139, 92, 246, 0.04);
     }
+
     .pro-card {
         transition: border-color 0.2s;
     }
+
     .pro-card:hover {
         border-color: rgba(139, 92, 246, 0.3);
     }
+
     .pro-title {
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
         font-size: 0.85rem;
         font-weight: 700;
         color: #fff;
         margin: 0 0 0.35rem;
     }
+
     .pro-desc {
         font-size: 0.72rem;
         color: rgba(255, 255, 255, 0.45);
         line-height: 1.5;
         margin: 0 0 0.75rem;
     }
+
     .pro-cta {
         display: flex;
-        align-items: center;
         justify-content: center;
-        gap: 0.35rem;
         padding: 0.45rem 0.85rem;
         background: #7c3aed;
         border-radius: 8px;
         font-size: 0.78rem;
         font-weight: 600;
         color: #fff;
-        transition: background 0.2s;
-    }
-    .pro-cta:hover {
-        background: #6d28d9;
     }
 
-    /* Sponsors */
     .sponsors-card {
         background: rgba(255, 255, 255, 0.015);
         border-color: rgba(255, 255, 255, 0.06);
     }
+
     .sponsors-title {
         font-size: 0.8rem;
         font-weight: 700;
         color: rgba(255, 255, 255, 0.7);
         margin: 0 0 0.3rem;
     }
+
     .sponsors-desc {
         font-size: 0.7rem;
         color: rgba(255, 255, 255, 0.35);
         line-height: 1.45;
         margin: 0 0 0.75rem;
     }
+
     .sponsor-tier {
         margin-bottom: 0.75rem;
     }
+
     .tier-label {
         font-size: 0.55rem;
         font-weight: 700;
@@ -405,6 +612,7 @@
         display: block;
         margin-bottom: 0.4rem;
     }
+
     .sponsor-item {
         display: flex;
         align-items: center;
@@ -416,9 +624,11 @@
         text-decoration: none;
         transition: border-color 0.2s;
     }
+
     .sponsor-item:hover {
         border-color: rgba(255, 255, 255, 0.12);
     }
+
     .sponsor-logo {
         width: 28px;
         height: 28px;
@@ -431,12 +641,14 @@
         font-size: 0.75rem;
         flex-shrink: 0;
     }
+
     .sponsor-info {
         display: flex;
         flex-direction: column;
         gap: 1px;
         min-width: 0;
     }
+
     .sponsor-info strong {
         font-size: 0.72rem;
         font-weight: 600;
@@ -445,6 +657,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
     .sponsor-info span {
         font-size: 0.62rem;
         color: rgba(255, 255, 255, 0.35);
@@ -452,10 +665,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
     .sponsor-logos-row {
         display: flex;
         gap: 0.5rem;
     }
+
     .sponsor-logo-small {
         width: 36px;
         height: 36px;
@@ -468,21 +683,6 @@
         color: rgba(255, 255, 255, 0.5);
         font-size: 0.8rem;
         font-weight: 700;
-        text-decoration: none;
-        transition: border-color 0.2s;
-    }
-    .sponsor-logo-small:hover {
-        border-color: rgba(255, 255, 255, 0.12);
-    }
-
-    .sponsor-extra-logo {
-        margin-bottom: 0.75rem;
-    }
-    .extra-name {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: rgba(255, 255, 255, 0.6);
-        letter-spacing: 0.02em;
     }
 
     .sponsor-cta-btn {
@@ -499,49 +699,47 @@
         color: #fff;
         text-decoration: none;
         transition: background 0.2s;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.2rem;
     }
+
     .sponsor-cta-btn:hover {
         background: #6d28d9;
     }
-    .sponsor-footnote {
-        font-size: 0.6rem;
-        color: rgba(255, 255, 255, 0.25);
-        text-align: center;
-        margin: 0;
-        line-height: 1.4;
-    }
-    .sponsor-footnote span {
-        text-decoration: underline;
-        cursor: pointer;
-    }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 1200px) {
         .right-panel {
             display: none;
         }
+
         .main-content {
             margin-right: 0;
         }
     }
+
     @media (max-width: 860px) {
+        .docs-mobile-header {
+            display: flex;
+        }
+
         .sidebar {
             display: none;
         }
+
         .main-content {
             margin-left: 0;
-            padding: 1.5rem 1.25rem 3rem;
+            padding: 4.8rem 1.25rem 3rem;
         }
     }
 
-    /* Scrollbar */
     .sidebar::-webkit-scrollbar,
-    .right-panel::-webkit-scrollbar {
+    .right-panel::-webkit-scrollbar,
+    .mobile-drawer::-webkit-scrollbar {
         width: 3px;
     }
+
     .sidebar::-webkit-scrollbar-thumb,
-    .right-panel::-webkit-scrollbar-thumb {
+    .right-panel::-webkit-scrollbar-thumb,
+    .mobile-drawer::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.06);
         border-radius: 2px;
     }

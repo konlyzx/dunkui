@@ -17,6 +17,12 @@
     <div class="section-block">
         <h2 class="demo-title-extra">Components</h2>
         <div class="card-list">
+            <a href="/docs/components" class="intro-card">
+                <span class="card-name">Components Overview</span>
+                <span class="card-desc"
+                    >Interactive catalog for Svelte 5 UI components.</span
+                >
+            </a>
             <a href="/docs/glitch-text" class="intro-card">
                 <span class="card-name">Glitch Text</span>
                 <span class="card-desc"
@@ -29,6 +35,12 @@
     <div class="section-block">
         <h2 class="demo-title-extra">Backgrounds</h2>
         <div class="card-list">
+            <a href="/docs/backgrounds" class="intro-card">
+                <span class="card-name">Backgrounds Overview</span>
+                <span class="card-desc"
+                    >Live playground for animated, GPU-like backgrounds.</span
+                >
+            </a>
             <a href="/docs/faulty-terminal" class="intro-card">
                 <span class="card-name">Faulty Terminal</span>
                 <span class="card-desc"
@@ -57,8 +69,38 @@
     </div>
 
     <div class="section-block">
+        <h2 class="demo-title-extra">Animations</h2>
+        <div class="card-list">
+            <a href="/docs/animations" class="intro-card">
+                <span class="card-name">Animations Overview</span>
+                <span class="card-desc"
+                    >Browse each animation as an individual docs page.</span
+                >
+            </a>
+        </div>
+    </div>
+
+    <div class="section-block">
+        <h2 class="demo-title-extra">Text Animations</h2>
+        <div class="card-list">
+            <a href="/docs/text-animations" class="intro-card">
+                <span class="card-name">Text Animations Overview</span>
+                <span class="card-desc"
+                    >Browse each text animation as an individual docs page.</span
+                >
+            </a>
+        </div>
+    </div>
+
+    <div class="section-block">
         <h2 class="demo-title-extra">Tools</h2>
         <div class="card-list">
+            <a href="/docs/tools" class="intro-card">
+                <span class="card-name">Tools Overview</span>
+                <span class="card-desc"
+                    >Generate theme tokens and visual presets interactively.</span
+                >
+            </a>
             <a href="/docs/theme-kit" class="intro-card">
                 <span class="card-name">Theme Kit</span>
                 <span class="card-desc"

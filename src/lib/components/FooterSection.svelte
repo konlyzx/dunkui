@@ -39,13 +39,13 @@
         <div class="footer-col">
             <h5>Product</h5>
             <a href="/docs">Showcase</a>
-            <a href="#">Pricing</a>
+            <a href="/docs/tools">Pricing</a>
             <a href="/docs">Resources</a>
         </div>
         <div class="footer-col">
             <h5>Technical</h5>
             <a href="/docs">Documentation</a>
-            <a href="#">API Reference</a>
+            <a href="/docs/components">API Reference</a>
             <a
                 href="https://github.com"
                 target="_blank"
@@ -54,9 +54,9 @@
         </div>
         <div class="footer-col">
             <h5>Support</h5>
-            <a href="#">Discord Community</a>
-            <a href="#">Contact Us</a>
-            <a href="#">Terms of Use</a>
+            <a href="https://discord.com" target="_blank" rel="noopener noreferrer">Discord Community</a>
+            <a href="mailto:hello@dunkui.dev">Contact Us</a>
+            <a href="/docs">Terms of Use</a>
         </div>
     </div>
     <div class="footer-bottom">

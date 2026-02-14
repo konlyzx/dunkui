@@ -206,6 +206,7 @@
         <div class="tabs-right">
             <button
                 class="fav-btn"
+                aria-label="Toggle favorite"
                 class:favorited={isFavorite}
                 onclick={() => (isFavorite = !isFavorite)}
                 title="Add to Favorites"
