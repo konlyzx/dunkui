@@ -23,7 +23,7 @@
     let spansRef: (HTMLElement | null)[] = [];
     let mouse = { x: 0, y: 0 };
     let cursor = { x: 0, y: 0 };
-    let fontSize = $state(minFontSize);
+    let fontSize = $state(0);
     let scaleY = $state(1);
     let lineHeight = $state(1);
     let chars = $derived(text.split(""));

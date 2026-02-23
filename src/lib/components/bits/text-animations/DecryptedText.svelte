@@ -15,13 +15,15 @@
         animateOn = "hover", // hover, view, both
     } = $props();
 
-    let displayText = $state(text);
+    let scrambledText = $state("");
     let isHovering = $state(false);
     let isScrambling = $state(false);
     let revealedIndices = $state(new Set<number>());
     let hasAnimated = $state(false);
     let containerRef: HTMLElement;
     let interval: any;
+
+    let displayText = $derived(isScrambling || interval ? scrambledText : text);
 
     // Cleanup on destroy
     onDestroy(() => {
@@ -136,10 +138,6 @@
             if (interval) clearInterval(interval);
 
             interval = setInterval(() => {
-                // Need to read latest revealedIndices if we were using state directly inside interval
-                // But in Svelte 5, state is fine if accessed properly.
-                // However, typical interval closure trap applies if we don't use functional update or ref logic.
-                // Let's use functional update pattern logic manually.
                 let nextRevealed = new Set(revealedIndices);
 
                 if (sequential) {
@@ -147,27 +145,30 @@
                         const nextIndex = getNextIndex(nextRevealed);
                         nextRevealed.add(nextIndex);
                         revealedIndices = nextRevealed; // Update state
-                        displayText = shuffleText(text, nextRevealed);
+                        scrambledText = shuffleText(text, nextRevealed);
                     } else {
                         clearInterval(interval);
+                        interval = null;
                         setIsScrambling(false);
                     }
                 } else {
-                    displayText = shuffleText(text, nextRevealed);
+                    scrambledText = shuffleText(text, nextRevealed);
                     currentIteration++;
                     if (currentIteration >= maxIterations) {
                         clearInterval(interval);
+                        interval = null;
                         setIsScrambling(false);
-                        displayText = text;
                     }
                 }
             }, speed);
         } else {
             // Reset when not hovering
-            displayText = text;
             revealedIndices = new Set();
             setIsScrambling(false);
-            if (interval) clearInterval(interval);
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
         }
     });
 

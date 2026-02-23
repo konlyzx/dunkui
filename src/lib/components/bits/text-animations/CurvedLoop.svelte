@@ -10,7 +10,7 @@
         interactive = true,
     } = $props();
 
-    let textPath: SVGTextPathElement;
+    let textPath: SVGTextPathElement | undefined = $state();
     let measureText: SVGTextElement;
     let animationId: number;
 
@@ -18,10 +18,16 @@
     let offset = $state(0);
 
     // Drag state
-    let isDragging = false;
-    let lastX = 0;
-    let dragDirection = direction;
-    let velocity = 0;
+    let isDragging = $state(false);
+    let lastX = $state(0);
+    let dragDirection = $state<string>("left");
+    let velocity = $state(0);
+
+    $effect(() => {
+        if (!isDragging) {
+            dragDirection = direction;
+        }
+    });
 
     // Compute clean text without trailing spaces
     let cleanText = $derived(marqueeText.trim() + "\u00A0");
@@ -104,11 +110,14 @@
     function onPointerUp(e: PointerEvent) {
         if (!interactive) return;
         isDragging = false;
-        dragDirection = velocity > 0 ? "right" : "left";
+        if (velocity !== 0) {
+            dragDirection = velocity > 0 ? "right" : "left";
+        }
     }
 </script>
 
 <div
+    role="presentation"
     class="curved-loop-jacket"
     style={`visibility: ${ready ? "visible" : "hidden"}; cursor: ${interactive ? (isDragging ? "grabbing" : "grab") : "auto"};`}
     onpointerdown={onPointerDown}

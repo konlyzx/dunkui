@@ -38,7 +38,7 @@
         return () => observer.disconnect();
     });
 
-    const defaultFrom =
+    const defaultFrom = $derived(
         direction === "top"
             ? {
                   filter: "blur(10px)",
@@ -49,7 +49,8 @@
                   filter: "blur(10px)",
                   opacity: 0,
                   transform: "translate3d(0,50px,0)",
-              };
+              },
+    );
 
     const defaultTo = {
         filter: "blur(0px)",

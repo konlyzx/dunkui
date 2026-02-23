@@ -9,38 +9,30 @@
     } = $props();
 
     let letters = $derived(Array.from(text));
-    let currentSpeed = $state(spinDuration);
-    let scale = $state(1);
+    let isHovering = $state(false);
 
-    $effect(() => {
-        currentSpeed = spinDuration;
-    });
+    let currentSpeed = $derived(
+        !isHovering || !onHover
+            ? spinDuration
+            : onHover === "slowDown"
+              ? spinDuration * 2
+              : onHover === "speedUp"
+                ? spinDuration / 4
+                : onHover === "pause"
+                  ? 0
+                  : onHover === "goBonkers"
+                    ? spinDuration / 20
+                    : spinDuration,
+    );
+
+    let scale = $derived(isHovering && onHover === "goBonkers" ? 0.8 : 1);
 
     function handleMouseEnter() {
-        if (!onHover) return;
-
-        switch (onHover) {
-            case "slowDown":
-                currentSpeed = spinDuration * 2;
-                break;
-            case "speedUp":
-                currentSpeed = spinDuration / 4;
-                break;
-            case "pause":
-                currentSpeed = 0; // effectively pause by massive duration or distinct logic, here we just stop
-                break;
-            case "goBonkers":
-                currentSpeed = spinDuration / 20;
-                scale = 0.8;
-                break;
-            default:
-                currentSpeed = spinDuration;
-        }
+        isHovering = true;
     }
 
     function handleMouseLeave() {
-        currentSpeed = spinDuration;
-        scale = 1;
+        isHovering = false;
     }
 </script>
 
