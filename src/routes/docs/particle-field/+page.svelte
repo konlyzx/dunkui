@@ -9,7 +9,7 @@
     let activeTab: "preview" | "code" | "contribute" = $state("preview");
 
     const codeString = $derived(`<script>
-  import { ParticleField } from 'dunk-ui';
+  import { ParticleField } from '@konlyzx/dunkui';
 <\/script>
 
 <ParticleField

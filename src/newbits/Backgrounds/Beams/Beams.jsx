@@ -142,13 +142,13 @@ float cnoise(vec3 P){
 `;
 
 const Beams = ({
-  beamWidth = 2,
-  beamHeight = 15,
+  beamWidth = 3,
+  beamHeight = 25,
   beamNumber = 12,
   lightColor = '#ffffff',
   speed = 2,
   noiseIntensity = 1.75,
-  scale = 0.2,
+  scale = 0.15,
   rotation = 0
 }) => {
   const meshRef = useRef(null);
@@ -210,6 +210,7 @@ const Beams = ({
   );
 
   return (
+    <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '200px' }}>
     <CanvasWrapper>
       <group rotation={[0, 0, degToRad(rotation)]}>
         <PlaneNoise ref={meshRef} material={beamMaterial} count={beamNumber} width={beamWidth} height={beamHeight} />
@@ -217,8 +218,9 @@ const Beams = ({
       </group>
       <ambientLight intensity={1} />
       <color attach="background" args={['#000000']} />
-      <PerspectiveCamera makeDefault position={[0, 0, 20]} fov={30} />
+      <PerspectiveCamera makeDefault position={[0, 0, 25]} fov={45} />
     </CanvasWrapper>
+    </div>
   );
 };
 

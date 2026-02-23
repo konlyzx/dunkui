@@ -1,12 +1,12 @@
 <script lang="ts">
-    import JSXBridgeIndex from "$lib/components/JSXBridgeIndex.svelte";
-    import { backgrounds } from "$lib/data/jsx-bridge-registry";
+    import CategoryIndex from "$lib/components/CategoryIndex.svelte";
+    import { backgrounds } from "$lib/data/registry";
 </script>
 
 <svelte:head><title>Backgrounds — DunkUI</title></svelte:head>
 
-<JSXBridgeIndex
+<CategoryIndex
     title="Backgrounds"
-    description="Todos los backgrounds de @Backgrounds en rutas individuales."
+    description="All background effect components available in DunkUI."
     items={backgrounds}
 />

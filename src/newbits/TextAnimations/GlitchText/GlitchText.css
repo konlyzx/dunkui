@@ -1,6 +1,7 @@
 .glitch {
   color: #fff;
-  font-size: clamp(2rem, 10vw, 8rem);
+  /* bump baseline size so preview isn't tiny in docs cards */
+  font-size: clamp(3rem, 12vw, 10rem);
   white-space: nowrap;
   font-weight: 900;
   position: relative;

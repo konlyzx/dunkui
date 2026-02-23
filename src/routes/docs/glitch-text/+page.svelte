@@ -7,7 +7,7 @@
     let isFavorite = $state(false);
     let activeTab: "preview" | "code" | "contribute" = $state("preview");
     const codeString = $derived(
-        `<script>\n  import { GlitchText } from 'dunk-ui';\n<\/script>\n\n<GlitchText\n  text="${text}"\n  intensity={${intensity}}\n  speed={${speed}}\n  colors={["${color1}", "${color2}"]}\n/>`,
+        `<script>\n  import { GlitchText } from '@konlyzx/dunkui';\n<\/script>\n\n<GlitchText\n  text="${text}"\n  intensity={${intensity}}\n  speed={${speed}}\n  colors={["${color1}", "${color2}"]}\n/>`,
     );
     const props = [
         {

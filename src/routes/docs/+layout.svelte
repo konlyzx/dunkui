@@ -6,7 +6,7 @@
         backgrounds,
         components,
         textAnimations,
-    } from "$lib/data/jsx-bridge-registry";
+    } from "$lib/data/registry";
 
     let currentPath = $derived($page.url.pathname);
 
@@ -24,7 +24,7 @@
 
     const SIDEBAR_SCROLL_KEY = "docs:sidebar-scroll";
 
-    let itemEls: Record<string, HTMLAnchorElement | undefined> = {};
+    let itemEls = $state<Record<string, HTMLAnchorElement | undefined>>({});
 
     const mapBridgeItems = (items: { route: string; name: string }[]) =>
         items.map((item) => ({ href: item.route, label: item.name, tag: "" }));
@@ -43,7 +43,10 @@
         },
         {
             title: "Animations",
-            items: [{ href: "/docs/animations", label: "Overview", tag: "" }, ...mapBridgeItems(animations)],
+            items: [
+                { href: "/docs/animations", label: "Overview", tag: "" },
+                ...mapBridgeItems(animations),
+            ],
         },
         {
             title: "Backgrounds",
@@ -144,7 +147,9 @@
         restoreSidebarScroll();
         if (sidebarEl) {
             const onSidebarScroll = () => saveSidebarScroll();
-            sidebarEl.addEventListener("scroll", onSidebarScroll, { passive: true });
+            sidebarEl.addEventListener("scroll", onSidebarScroll, {
+                passive: true,
+            });
             removeSidebarScrollListener = () => {
                 sidebarEl?.removeEventListener("scroll", onSidebarScroll);
             };
@@ -165,17 +170,30 @@
 
 <div class="docs-mobile-header">
     <a href="/" class="mobile-brand">DunkUI</a>
-    <button type="button" class="mobile-menu-btn" onclick={() => (mobileMenuOpen = !mobileMenuOpen)}>
+    <button
+        type="button"
+        class="mobile-menu-btn"
+        onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+    >
         {mobileMenuOpen ? "Close" : "Menu"}
     </button>
 </div>
 
 {#if mobileMenuOpen}
-    <button type="button" class="mobile-drawer-backdrop" onclick={closeMobileMenu} aria-label="Close menu"></button>
+    <button
+        type="button"
+        class="mobile-drawer-backdrop"
+        onclick={closeMobileMenu}
+        aria-label="Close menu"
+    ></button>
     <div class="mobile-drawer">
         <div class="mobile-drawer-head">
             <span>Navigation</span>
-            <button type="button" class="mobile-menu-btn" onclick={closeMobileMenu}>X</button>
+            <button
+                type="button"
+                class="mobile-menu-btn"
+                onclick={closeMobileMenu}>X</button
+            >
         </div>
 
         {#each categories as cat}
@@ -242,7 +260,10 @@
                                 class="sidebar-item"
                                 class:active={currentPath === item.href}
                                 bind:this={itemEls[item.href]}
-                                onmouseenter={(e) => onItemEnter(e.currentTarget as HTMLAnchorElement)}
+                                onmouseenter={(e) =>
+                                    onItemEnter(
+                                        e.currentTarget as HTMLAnchorElement,
+                                    )}
                                 onmouseleave={onItemLeave}
                             >
                                 {item.label}
@@ -276,7 +297,8 @@
                 <div class="right-card pro-card">
                     <p class="pro-title">Get DunkUI Pro</p>
                     <p class="pro-desc">
-                        55+ components, 100+ blocks & 5 templates to ship memorable products faster.
+                        55+ components, 100+ blocks & 5 templates to ship
+                        memorable products faster.
                     </p>
                     <div class="pro-cta">
                         <span>Explore Pro</span>
@@ -287,21 +309,36 @@
             <div class="right-card sponsors-card">
                 <p class="sponsors-title">Our Sponsors</p>
                 <p class="sponsors-desc">
-                    Help us maintain and grow DunkUI, keeping it free for devs worldwide.
+                    Help us maintain and grow DunkUI, keeping it free for devs
+                    worldwide.
                 </p>
 
                 <div class="sponsor-tier">
                     <span class="tier-label">DIAMOND</span>
-                    <a href="https://shadcnblocks.com" target="_blank" rel="noopener noreferrer" class="sponsor-item">
+                    <a
+                        href="https://shadcnblocks.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="sponsor-item"
+                    >
                         <span class="sponsor-logo">⬡</span>
                         <div class="sponsor-info">
-                            <strong>ShadcnBlocks.com</strong><span>2100+ extra Shadcn UI blocks</span>
+                            <strong>ShadcnBlocks.com</strong><span
+                                >2100+ extra Shadcn UI blocks</span
+                            >
                         </div>
                     </a>
-                    <a href="https://shadcnstudio.com" target="_blank" rel="noopener noreferrer" class="sponsor-item">
+                    <a
+                        href="https://shadcnstudio.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="sponsor-item"
+                    >
                         <span class="sponsor-logo">⬡</span>
                         <div class="sponsor-info">
-                            <strong>shadcnstudio.com</strong><span>shadcn blocks & templates</span>
+                            <strong>shadcnstudio.com</strong><span
+                                >shadcn blocks & templates</span
+                            >
                         </div>
                     </a>
                 </div>
@@ -309,9 +346,15 @@
                 <div class="sponsor-tier">
                     <span class="tier-label">SILVER</span>
                     <div class="sponsor-logos-row">
-                        <span class="sponsor-logo-small" title="NEXT.js WEEKLY">N</span>
-                        <span class="sponsor-logo-small" title="shadcraft">⬡</span>
-                        <span class="sponsor-logo-small" title="shadcn blocks">S</span>
+                        <span class="sponsor-logo-small" title="NEXT.js WEEKLY"
+                            >N</span
+                        >
+                        <span class="sponsor-logo-small" title="shadcraft"
+                            >⬡</span
+                        >
+                        <span class="sponsor-logo-small" title="shadcn blocks"
+                            >S</span
+                        >
                     </div>
                 </div>
 
@@ -422,7 +465,9 @@
         width: 2px;
         height: 16px;
         border-radius: 999px;
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+        transition:
+            transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.2s;
         pointer-events: none;
     }
 

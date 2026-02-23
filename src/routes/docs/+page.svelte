@@ -10,7 +10,7 @@
     <div class="install-block">
         <span class="install-label">Quick Install</span>
         <div class="install-code">
-            <code>npm install dunk-ui</code>
+            <code>npm install @konlyzx/dunkui</code>
         </div>
     </div>
 

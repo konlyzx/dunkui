@@ -6,7 +6,7 @@
     let isFavorite = $state(false);
     let activeTab: "preview" | "code" | "contribute" = $state("preview");
     const codeString = $derived(
-        `<script>\n  import { RetroGrid } from 'dunk-ui';\n<\/script>\n\n<RetroGrid\n  lineColor="${lineColor}"\n  speed={${speed}}\n  perspective={${perspective}}\n  fade={${fade}}\n/>`,
+        `<script>\n  import { RetroGrid } from '@konlyzx/dunkui';\n<\/script>\n\n<RetroGrid\n  lineColor="${lineColor}"\n  speed={${speed}}\n  perspective={${perspective}}\n  fade={${fade}}\n/>`,
     );
     const props = [
         {

@@ -175,7 +175,11 @@ const Lightning = ({ hue = 230, xOffset = 0, speed = 1, intensity = 1, size = 1 
     };
   }, [hue, xOffset, speed, intensity, size]);
 
-  return <canvas ref={canvasRef} className="lightning-container" />;
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '200px' }}>
+      <canvas ref={canvasRef} className="lightning-container" />
+    </div>
+  );
 };
 
 export default Lightning;

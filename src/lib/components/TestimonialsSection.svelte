@@ -42,8 +42,8 @@
             <details class="faq-item">
                 <summary>How do I get started?</summary>
                 <p>
-                    Install via npm with <code>npm install dunk-ui</code>,
-                    import any component, and drop it into your SvelteKit
+                    Install via npm with <code>npm install @konlyzx/dunkui</code
+                    >, import any component, and drop it into your SvelteKit
                     project. Check out our docs for interactive examples.
                 </p>
             </details>

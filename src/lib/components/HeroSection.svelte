@@ -49,7 +49,7 @@
                     ><span class="code-kw">import</span> {"{"} <span
                         class="code-comp">Aurora</span
                     > {"}"} <span class="code-kw">from</span> <span
-                        class="code-str">'dunk-ui'</span
+                        class="code-str">'@konlyzx/dunkui'</span
                     >;
 
 <span class="code-tag">&lt;Aurora</span>

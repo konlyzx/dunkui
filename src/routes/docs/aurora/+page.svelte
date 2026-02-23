@@ -8,7 +8,7 @@
     let isFavorite = $state(false);
     let activeTab: "preview" | "code" | "contribute" = $state("preview");
     const codeString = $derived(
-        `<script>\n  import { Aurora } from 'dunk-ui';\n<\/script>\n\n<Aurora\n  speed={${speed}}\n  intensity={${intensity}}\n  blur={${blur}}\n  colors={["${color1}", "${color2}", "${color3}"]}\n/>`,
+        `<script>\n  import { Aurora } from '@konlyzx/dunkui';\n<\/script>\n\n<Aurora\n  speed={${speed}}\n  intensity={${intensity}}\n  blur={${blur}}\n  colors={["${color1}", "${color2}", "${color3}"]}\n/>`,
     );
     const props = [
         {

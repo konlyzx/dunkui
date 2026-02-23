@@ -7,7 +7,7 @@ import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphe
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 
 // replace with your own imports, see the usage snippet for details
-import cardGLB from './card.glb';
+import cardGLB from './card.glb?url';
 import lanyard from './lanyard.png';
 
 import * as THREE from 'three';

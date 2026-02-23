@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import './ReflectiveCard.css';
-import { Fingerprint, Activity, Lock } from 'lucide-react';
+import { FiLock, FiActivity } from 'react-icons/fi';
+import { MdFingerprint } from 'react-icons/md';
 
 const ReflectiveCard = ({
   blurStrength = 12,
@@ -119,10 +120,10 @@ const ReflectiveCard = ({
       <div className="reflective-content">
         <div className="card-header">
           <div className="security-badge">
-            <Lock size={14} className="security-icon" />
+            <FiLock size={14} className="security-icon" />
             <span>SECURE ACCESS</span>
           </div>
-          <Activity className="status-icon" size={20} />
+          <FiActivity className="status-icon" size={20} />
         </div>
 
         <div className="card-body">
@@ -138,7 +139,7 @@ const ReflectiveCard = ({
             <span className="value">8901-2345-6789</span>
           </div>
           <div className="fingerprint-section">
-            <Fingerprint size={32} className="fingerprint-icon" />
+            <MdFingerprint size={32} className="fingerprint-icon" />
           </div>
         </div>
       </div>

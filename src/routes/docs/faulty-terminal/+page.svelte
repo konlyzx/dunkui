@@ -26,7 +26,7 @@
     let activeTab: "preview" | "code" | "contribute" = $state("preview");
 
     const codeString = $derived(`<script>
-  import { FaultyTerminal } from 'dunk-ui';
+  import FaultyTerminal from '$lib/components/FaultyTerminal.svelte';
 <\/script>
 
 <FaultyTerminal

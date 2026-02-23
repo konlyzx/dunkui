@@ -1,12 +1,12 @@
 <script lang="ts">
-    import JSXBridgeIndex from "$lib/components/JSXBridgeIndex.svelte";
-    import { textAnimations } from "$lib/data/jsx-bridge-registry";
+    import CategoryIndex from "$lib/components/CategoryIndex.svelte";
+    import { textAnimations } from "$lib/data/registry";
 </script>
 
 <svelte:head><title>Text Animations — DunkUI</title></svelte:head>
 
-<JSXBridgeIndex
+<CategoryIndex
     title="Text Animations"
-    description="Todas las animaciones de texto de @TextAnimations en rutas individuales."
+    description="All text animation components available in DunkUI."
     items={textAnimations}
 />

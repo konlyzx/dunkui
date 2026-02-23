@@ -1,6 +1,0 @@
-[00:12:15.702] Server  ERROR   Error: Cannot find module '/home/taste/Documentos/Projects/dunkui/.next/dev/server/middleware-manifest.json'
-Require stack:
-- /home/taste/Documentos/Projects/dunkui/node_modules/next/dist/server/next-server.js
-- /home/taste/Documentos/Projects/dunkui/node_modules/next/dist/server/dev/next-dev-server.js
-- /home/taste/Documentos/Projects/dunkui/node_modules/next/dist/server/next.js
-- /home/taste/Documentos/Projects/dunkui/node_modules/next/dist/server/lib/start-server.js

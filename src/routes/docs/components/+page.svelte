@@ -1,12 +1,12 @@
 <script lang="ts">
-    import JSXBridgeIndex from "$lib/components/JSXBridgeIndex.svelte";
-    import { components } from "$lib/data/jsx-bridge-registry";
+    import CategoryIndex from "$lib/components/CategoryIndex.svelte";
+    import { components } from "$lib/data/registry";
 </script>
 
 <svelte:head><title>Components — DunkUI</title></svelte:head>
 
-<JSXBridgeIndex
+<CategoryIndex
     title="Components"
-    description="Todos los componentes de @Components en rutas individuales."
+    description="All UI components available in DunkUI."
     items={components}
 />

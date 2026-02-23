@@ -5,12 +5,12 @@ import * as THREE from 'three';
 
 const AntigravityInner = ({
   count = 300,
-  magnetRadius = 10,
-  ringRadius = 10,
+  magnetRadius = 18,
+  ringRadius = 18,
   waveSpeed = 0.4,
-  waveAmplitude = 1,
-  particleSize = 2,
-  lerpSpeed = 0.1,
+  waveAmplitude = 1.2,
+  particleSize = 4,
+  lerpSpeed = 0.15,
   color = '#FF9FFC',
   autoAnimate = false,
   particleVariance = 1,
@@ -170,9 +170,11 @@ const AntigravityInner = ({
 
 const Antigravity = props => {
   return (
-    <Canvas camera={{ position: [0, 0, 50], fov: 35 }}>
-      <AntigravityInner {...props} />
-    </Canvas>
+    <div style={{ width: '100%', height: '100%', minHeight: '200px' }}>
+      <Canvas camera={{ position: [0, 0, 35], fov: 50 }} style={{ width: '100%', height: '100%' }}>
+        <AntigravityInner {...props} />
+      </Canvas>
+    </div>
   );
 };
 

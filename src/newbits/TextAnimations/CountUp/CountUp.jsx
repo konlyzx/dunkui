@@ -1,8 +1,8 @@
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useInView, useMotionValue, useSpring } from 'motion/react';
-import { useCallback, useEffect, useRef } from 'react';
 
 export default function CountUp({
-  to,
+  to = 0,
   from = 0,
   direction = 'up',
   delay = 0,
@@ -27,7 +27,8 @@ export default function CountUp({
   const isInView = useInView(ref, { once: true, margin: '0px' });
 
   const getDecimalPlaces = num => {
-    const str = num.toString();
+    const n = typeof num === 'number' && !Number.isNaN(num) ? num : Number(num ?? 0);
+    const str = n.toString();
 
     if (str.includes('.')) {
       const decimals = str.split('.')[1];

@@ -1,11 +1,13 @@
 import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
-import { Icon } from '@chakra-ui/react';
 import { RiVolumeDownFill, RiVolumeUpFill } from 'react-icons/ri';
 
 import './ElasticSlider.css';
 
 const MAX_OVERFLOW = 50;
+
+const defaultLeftIcon = <RiVolumeDownFill style={{ display: 'block', fontSize: '1.25rem' }} />;
+const defaultRightIcon = <RiVolumeUpFill style={{ display: 'block', fontSize: '1.25rem' }} />;
 
 export default function ElasticSlider({
   defaultValue = 50,
@@ -14,8 +16,8 @@ export default function ElasticSlider({
   className = '',
   isStepped = false,
   stepSize = 1,
-  leftIcon = <Icon as={RiVolumeDownFill} />,
-  rightIcon = <Icon as={RiVolumeUpFill} />
+  leftIcon = defaultLeftIcon,
+  rightIcon = defaultRightIcon
 }) {
   return (
     <div className={`slider-container ${className}`}>

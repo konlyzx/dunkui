@@ -1,3 +1,4 @@
+import React from 'react';
 import './GlitchText.css';
 
 const GlitchText = ({ children, speed = 1, enableShadows = true, enableOnHover = true, className = '' }) => {
