@@ -2,8 +2,7 @@
 	import FaultyTerminal from "$lib/components/FaultyTerminal.svelte";
 	import HeroSection from "$lib/components/HeroSection.svelte";
 	import StatsSection from "$lib/components/StatsSection.svelte";
-	import ComponentsShowcase from "$lib/components/ComponentsShowcase.svelte";
-	import ToolkitSection from "$lib/components/ToolkitSection.svelte";
+	import TemplatesSection from "$lib/components/TemplatesSection.svelte";
 	import TestimonialsSection from "$lib/components/TestimonialsSection.svelte";
 	import FooterSection from "$lib/components/FooterSection.svelte";
 	import { onMount, tick } from "svelte";
@@ -71,8 +70,7 @@
 <div class="page-content">
 	<HeroSection />
 	<StatsSection />
-	<ComponentsShowcase />
-	<ToolkitSection />
+	<TemplatesSection />
 	<TestimonialsSection />
 	<FooterSection />
 </div>

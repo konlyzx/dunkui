@@ -6,8 +6,15 @@ export interface RegistryItem {
     route: string;
     slug: string;
     description?: string;
-    category?: 'animations' | 'backgrounds' | 'components' | 'text-animations';
+    category?: 'animations' | 'backgrounds' | 'components' | 'text-animations' | 'templates';
 }
+
+export const templates: RegistryItem[] = [
+    { name: "SaaS Launchpad", slug: "saas-launchpad", route: "/docs/templates/saas-launchpad", category: "templates" },
+    { name: "Creator Portfolio", slug: "creator-portfolio", route: "/docs/templates/creator-portfolio", category: "templates" },
+    { name: "AI Dashboard UI", slug: "ai-dashboard-ui", route: "/docs/templates/ai-dashboard-ui", category: "templates" },
+    { name: "E-Commerce Storefront", slug: "ecommerce-storefront", route: "/docs/templates/ecommerce-storefront", category: "templates" },
+];
 
 export const animations: RegistryItem[] = [
     { name: "Target Cursor", slug: "target-cursor", route: "/docs/animations/target-cursor" },

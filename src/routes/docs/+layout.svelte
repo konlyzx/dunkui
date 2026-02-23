@@ -6,6 +6,7 @@
         backgrounds,
         components,
         textAnimations,
+        templates,
     } from "$lib/data/registry";
 
     let currentPath = $derived($page.url.pathname);
@@ -33,6 +34,13 @@
         {
             title: "Get Started",
             items: [{ href: "/docs", label: "Introduction", tag: "" }],
+        },
+        {
+            title: "Templates",
+            items: [
+                { href: "/docs/templates", label: "Overview", tag: "" },
+                ...mapBridgeItems(templates),
+            ],
         },
         {
             title: "Components",
