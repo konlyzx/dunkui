@@ -131,7 +131,7 @@
     }
 
     .faq-item code {
-        background: rgba(147, 51, 234, 0.15);
+        background: rgba(255, 62, 0, 0.15);
         color: var(--accent-light);
         padding: 2px 8px;
         border-radius: 4px;

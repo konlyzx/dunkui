@@ -161,7 +161,7 @@
 
     .preview-text:hover {
         border-color: var(--accent);
-        box-shadow: 0 0 30px rgba(147, 51, 234, 0.15);
+        box-shadow: 0 0 30px rgba(255, 62, 0, 0.15);
     }
 
     /* Glitch on hover */

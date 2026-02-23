@@ -17,7 +17,7 @@
         <!-- Small card: Node Generator -->
         <div
             class="bento-card card-sm fade-in"
-            style="background: linear-gradient(135deg, rgba(147, 51, 234, 0.08), transparent);"
+            style="background: linear-gradient(135deg, rgba(255, 62, 0, 0.08), transparent);"
         >
             <span class="material-symbols-rounded card-icon">hub</span>
             <h2>Node Generator</h2>
@@ -42,7 +42,7 @@
         <!-- Large card: WebGL for Creators -->
         <div
             class="bento-card card-lg fade-in"
-            style="background: radial-gradient(circle at bottom right, rgba(147, 51, 234, 0.08), transparent);"
+            style="background: radial-gradient(circle at bottom right, rgba(255, 62, 0, 0.08), transparent);"
         >
             <h2 class="card-title-xl">WebGL for Creators</h2>
             <p>
@@ -250,7 +250,7 @@
     .orbit-ring {
         width: 60px;
         height: 60px;
-        border: 1px solid rgba(147, 51, 234, 0.3);
+        border: 1px solid rgba(255, 62, 0, 0.3);
         border-radius: 50%;
         animation: orbitSpin 6s linear infinite;
     }
@@ -403,9 +403,9 @@
         height: 60%;
         background: linear-gradient(
             90deg,
-            rgba(147, 51, 234, 0.3),
+            rgba(255, 62, 0, 0.3),
             rgba(53, 211, 255, 0.3),
-            rgba(147, 51, 234, 0.3)
+            rgba(255, 62, 0, 0.3)
         );
         border-radius: 50% 50% 0 0;
         filter: blur(20px);

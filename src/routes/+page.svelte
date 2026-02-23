@@ -84,7 +84,7 @@
 		height: 100vh;
 		background: radial-gradient(
 			circle at 50% -10%,
-			rgba(147, 51, 234, 0.08) 0%,
+			rgba(255, 62, 0, 0.08) 0%,
 			transparent 60%
 		);
 		z-index: -1;

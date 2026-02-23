@@ -75,11 +75,11 @@
         margin: 0 auto;
         background: linear-gradient(
             135deg,
-            rgba(147, 51, 234, 0.15) 0%,
+            rgba(255, 62, 0, 0.15) 0%,
             rgba(168, 85, 247, 0.08) 50%,
-            rgba(147, 51, 234, 0.05) 100%
+            rgba(255, 62, 0, 0.05) 100%
         );
-        border: 1px solid rgba(147, 51, 234, 0.2);
+        border: 1px solid rgba(255, 62, 0, 0.2);
         border-radius: var(--radius-2xl);
         padding: 5rem 2rem;
         text-align: center;
@@ -95,7 +95,7 @@
         height: 200%;
         background: radial-gradient(
             ellipse,
-            rgba(147, 51, 234, 0.08) 0%,
+            rgba(255, 62, 0, 0.08) 0%,
             transparent 60%
         );
         pointer-events: none;
@@ -122,7 +122,7 @@
     }
 
     .gradient-text {
-        background: var(--gradient-purple);
+        background: var(--gradient-brand);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;

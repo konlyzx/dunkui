@@ -2,25 +2,25 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded');
 
 :root {
-  --bg: #05000c;
-  --bg-soft: #0a0518;
-  --surface: #0a0518;
-  --surface-2: #16102c;
-  --surface-3: #1e1540;
+  --bg: #0c0a09;
+  --bg-soft: #1c1917;
+  --surface: #1c1917;
+  --surface-2: #292524;
+  --surface-3: #44403c;
   --surface-high: rgba(255, 255, 255, 0.03);
   --stroke: rgba(255, 255, 255, 0.08);
   --stroke-hover: rgba(255, 255, 255, 0.2);
   --text: #ffffff;
-  --text-secondary: #d8d0ee;
+  --text-secondary: #d6d3d1;
   --muted: #94a3b8;
-  --accent: #9333ea;
-  --accent-light: #c084fc;
-  --accent-glow: rgba(147, 51, 234, 0.45);
+  --accent: #ff3e00;
+  --accent-light: #ff7a45;
+  --accent-glow: rgba(255, 62, 0, 0.45);
   --accent-2: #38bdf8;
   --accent-3: #f43f5e;
-  --gradient-purple: linear-gradient(135deg, #9333ea 0%, #c084fc 50%, #e879f9 100%);
-  --gradient-hero: linear-gradient(180deg, rgba(147, 51, 234, 0.08) 0%, transparent 60%);
-  --gradient-cyan: linear-gradient(135deg, #38bdf8 0%, #9333ea 100%);
+  --gradient-brand: linear-gradient(135deg, #ff3e00 0%, #ff7a45 50%, #ffa382 100%);
+  --gradient-hero: linear-gradient(180deg, rgba(255, 62, 0, 0.08) 0%, transparent 60%);
+  --gradient-cyan: linear-gradient(135deg, #38bdf8 0%, #ff3e00 100%);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -72,12 +72,12 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(147, 51, 234, 0.35);
+  background: rgba(255, 62, 0, 0.35);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(147, 51, 234, 0.55);
+  background: rgba(255, 62, 0, 0.55);
 }
 
 .material-symbols-rounded {

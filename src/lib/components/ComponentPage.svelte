@@ -1367,7 +1367,7 @@
         color: #4ade80;
     }
     .kw {
-        color: #c084fc;
+        color: #ff7a45;
     }
     .str {
         color: #4ade80;
