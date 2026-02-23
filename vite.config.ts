@@ -3,5 +3,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [sveltekit()],
-	assetsInclude: ['**/*.glb', '**/*.gltf']
+	assetsInclude: ['**/*.glb', '**/*.gltf'],
+	esbuild: {
+		jsx: 'automatic'
+	}
 });

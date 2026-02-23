@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import * as React from "react";
-    import ReactDOM from "react-dom/client";
     import type { Root } from "react-dom/client";
 
     let { component, props = {}, class: className } = $props();
@@ -12,12 +11,24 @@
     $effect(() => {
         if (!container || !component) return;
 
-        if (!root) {
-            root = ReactDOM.createRoot(container);
+        let cancelled = false;
+
+        async function init() {
+            if (!root) {
+                const { createRoot } = await import("react-dom/client");
+                if (cancelled) return;
+                root = createRoot(container!);
+            }
+            root.render(
+                React.createElement(component, { ...props, className }),
+            );
         }
 
-        // Render the component
-        root.render(React.createElement(component, { ...props, className }));
+        init();
+
+        return () => {
+            cancelled = true;
+        };
     });
 
     onDestroy(() => {
